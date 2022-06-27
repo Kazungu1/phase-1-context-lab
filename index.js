@@ -8,6 +8,59 @@
  As a result, the lessons for this function will pass *and* it will be available
  for you to use if you need it!
  */
+ let createEmployeeRecord = row=>{
+    return {
+        firstName: row[0],
+        familyName: row[1],
+        title: row[2],
+        payPerHour: row[3],
+        timeInEvents: [],
+        timeOutEvents: []
+    }
+}
+let createEmployeeRecords = employeeRowData=> {
+    return employeeRowData.map(function(row){
+        return createEmployeeRecord(row)
+    })
+}
+let createTimeInEvent = dateStamp=>{
+    let [date, hour] = dateStamp.split(' ')
+
+    this.timeInEvents.push({
+        type: "TimeIn",
+        hour: parseInt(hour, 10),
+        date,
+    })
+
+    return this
+}
+let createTimeOutEvent = dateStamp=>{
+    let [date, hour] = dateStamp.split(' ')
+
+    this.timeOutEvents.push({
+        type: "TimeOut",
+        hour: parseInt(hour, 10),
+        date,
+    })
+
+    return (`this`)
+}
+let hoursWorkedOnDate = dateSort=>{
+    let inEvent = this.timeInEvents.find(function(e){
+        return e.date === dateSort
+    })
+
+    let outEvent = this.timeOutEvents.find(function(e){
+        return e.date === dateSort
+    })
+
+    return (outEvent.hour - inEvent.hour) / 100
+}
+let wagesEarnedOnDate = dateSort=>{
+    let rawWage = hoursWorkedOnDate.call(this, dateSort)
+        * this.payPerHour
+    return parseFloat(rawWage.toString())
+}
 
 const allWagesFor = function () {
     const eligibleDates = this.timeInEvents.map(function (e) {
